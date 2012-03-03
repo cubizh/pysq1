@@ -1,4 +1,4 @@
-#		Copyright (c) 2012 António Gomes (cubizh at gmail dot com)
+#	    Copyright (c) 2012 António Gomes (cubizh at gmail dot com)
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
 #       the Free Software Foundation; either version 2 of the License, or
@@ -151,9 +151,8 @@ def find_state(s,path,depth):
 # b is (3,0) of solved
 		
 final = sq1state()
-# 
 b = sq1state('dd4aa18hh7gg','ee5ff63cc2bb')
 
-#allstates = []
-#x = find_state(b,[],0)
-#print x	
+allstates = []
+x = find_state(b,[],0)
+print x	
