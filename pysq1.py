@@ -55,7 +55,7 @@ class sq1state:
 					return False
 		return True
 
-	#Copying a sq1 state from one class to another
+	# Copying a sq1 state from one class to another
 	def copy(self):
 		return sq1state(self.u,self.d)
 
@@ -92,8 +92,7 @@ class sq1state:
 		
 # Function to find the path between two given states (s and final)
 # It's currently bruteforce and recursive (eew!) and it's not finished
-def find_state(s,path,depth):
-	global final
+def find_state(s,final,path,depth):
 	# allstates stores all the states we've been through so we don't
 	# repeat ourselves if we find a state we've been in before
 	global allstates
@@ -132,7 +131,7 @@ def find_state(s,path,depth):
 		# by calling the function one level down in depth		
 		newpath = copy.copy(path)
 		newpath.append(t)
-		res = find_state(new,newpath,depth+1)
+		res = find_state(new,final,newpath,depth+1)
 		# We have returned from the function call so we either have :
 		# the empty set, which didn't find anything for this 
 				
@@ -151,9 +150,8 @@ def find_state(s,path,depth):
 # Final position is solved
 # b is (3,0) of solved
 		
-final = sq1state()
-b = sq1state('dd4aa18hh7gg','ee5ff63cc2bb')
+b = sq1state('dd4aa18hh7gg', 'ee5ff63cc2bb')
 
 allstates = []
-x = find_state(b,[],0)
+x = find_state(b, sq1state(), [], 0)
 print x	
