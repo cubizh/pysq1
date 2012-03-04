@@ -62,7 +62,7 @@ class sq1state:
 	# Apply face turns to the square-1. Move is a tuple (A,B)
 	def turn(self, move):
 		if move in self.valid_twists:
-			self.u =s elf.u[-move[0]:] + self.u[:-move[0]]
+			self.u = self.u[-move[0]:] + self.u[:-move[0]]
 			self.d = self.d[move[1]:] + self.d[:move[1]]
 
 
