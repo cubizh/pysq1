@@ -32,71 +32,70 @@ MAX_DEPTH = 6
 class sq1state:
 	#Initialization : U and D are given by strings, which by default
 	#                 are set to solved state
-	def __init__(self,u='aa1bb2cc3dd4',d='ee5ff6gg7hh8'):
-		self.u=u
-		self.d=d
+	def __init__(self, u='aa1bb2cc3dd4', d='ee5ff6gg7hh8'):
+		self.u = u
+		self.d = d
 		# Define which are the valid (slicable) turns for this state
 		self.fix_twists()
 	
 	#Output of the square-1. Only necessary (for shortness U and D):	
 	def __repr__(self):
-		return "U: %s - D: %s" %(self.u,self.d)
+		return "U: %s - D: %s" %(self.u, self.d)
 		
 	def __str__(self):
-		return "U: %s - D: %s" %(self.u,self.d)
+		return "U: %s - D: %s" %(self.u, self.d)
 
 	# Checking for equal states
-	def __eq__(self,x):
+	def __eq__(self, x):
 		# Two states are equal if all of U and D match on both
 		# '*' means anything goes, so it's not checked
 		for i in range(12):
-			if x.u[i]!='*':
-				if self.u[i]!=x.u[i] or self.d[i]!=x.d[i]:
+			if x.u[i] != '*':
+				if self.u[i] != x.u[i] or self.d[i] != x.d[i]:
 					return False
 		return True
 
 	# Copying a sq1 state from one class to another
 	def copy(self):
-		return sq1state(self.u,self.d)
+		return sq1state(self.u, self.d)
 
 	# Apply face turns to the square-1. Move is a tuple (A,B)
 	def turn(self, move):
 		if move in self.valid_twists:
-			self.u=self.u[-move[0]:]+self.u[:-move[0]]
-			self.d=self.d[move[1]:]+self.d[:move[1]]
+			self.u = self.u[-move[0]:] + self.u[:-move[0]]
+			self.d = self.d[move[1]:] + self.d[:move[1]]
 
 
 	# For the given square-1 state, find all valid moves (except (0,0) )
 	# and store them in the valid_twists list
 	def fix_twists(self):
 		if '*' in self.u or '*' in self.d:
-			self.valid_twists=[]
+			self.valid_twists = []
 		else:
 			self.valid_twists = [(a,b) \
 		          for a in \
 		          [t for t in range(-5,7) \
-		          if (self.u[-t]!=self.u[-(t+1)] and self.u[5-t]!=self.u[(5-t)+1])] \
+		          if (self.u[-t] != self.u[-(t+1)] and self.u[5-t] != self.u[(5-t)+1])] \
 		          for b in \
 		          [t for t in range(-5,7) \
-		          if (self.d[t-1]!=self.d[t] and self.d[5+t]!=self.d[((5+t)+1)%12])]]
+		          if (self.d[t-1] != self.d[t] and self.d[5+t] != self.d[((5+t)+1)%12])]]
 		    # Remove (0,0) from valid turns
 			self.valid_twists.remove((0,0))
 		
 	# Slice is reserved, so using / to slice
 	def dash(self):
-		s1=self.u[6:12][::-1]
-		s2=self.d[6:12][::-1]
-		self.u=self.u[0:6]+s2
-		self.d=self.d[0:6]+s1
+		s1 = self.u[6:12][::-1]
+		s2 = self.d[6:12][::-1]
+		self.u = self.u[0:6] + s2
+		self.d = self.d[0:6] + s1
 		self.fix_twists()
 		
 # Function to find the path between two given states (s and final)
 # It's currently bruteforce and recursive (eew!) and it's not finished
-def find_state(s,final,path,depth):
+def find_state(s, final, path, allstates, depth):
 	# allstates stores all the states we've been through so we don't
 	# repeat ourselves if we find a state we've been in before
-	global allstates
-	#print path
+
 	# If we found a solution return the path we have so far with (0,0)
 	# so it counts as a move (when we a long path, it's for the last /
 	if s == final:
@@ -106,8 +105,8 @@ def find_state(s,final,path,depth):
 	if depth == MAX_DEPTH:
 		return []
 	# Check if the current state is one we've been on before
-	if (s.u,s.d) not in allstates:
-		allstates.append((s.u,s.d))
+	if (s.u, s.d) not in allstates:
+		allstates.append((s.u, s.d))
 	else:
 		# Not too happy about this, as we can reach here from a better
 		# position but I'm not sure what we can do to improve
@@ -122,7 +121,7 @@ def find_state(s,final,path,depth):
 			path.append(t)
 			return path
 		# Add this position to the global list of positions
-		allstates.append((new.u,new.d))
+		allstates.append((new.u, new.d))
 		# Slice
 
 		new.dash()
@@ -131,7 +130,7 @@ def find_state(s,final,path,depth):
 		# by calling the function one level down in depth		
 		newpath = copy.copy(path)
 		newpath.append(t)
-		res = find_state(new,final,newpath,depth+1)
+		res = find_state(new, final, newpath, allstates, depth+1)
 		# We have returned from the function call so we either have :
 		# the empty set, which didn't find anything for this 
 				
@@ -146,12 +145,9 @@ def find_state(s,final,path,depth):
 	return []		
 
 	
-#Just a test
 # Final position is solved
 # b is (3,0) of solved
-		
-b = sq1state('dd4aa18hh7gg', 'ee5ff63cc2bb')
 
-allstates = []
-x = find_state(b, sq1state(), [], 0)
+b = sq1state('dd4aa18hh7gg', 'ee5ff63cc2bb')
+x = find_state(b, sq1state(), [], [], 0)
 print x	
